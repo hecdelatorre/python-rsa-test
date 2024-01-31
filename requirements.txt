@@ -1,0 +1,3 @@
+rsa
+python-dotenv
+colorama

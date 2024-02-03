@@ -4,6 +4,9 @@ from pathlib import Path
 from rsa import PublicKey, PrivateKey, encrypt, decrypt
 
 def load_public_key():
+    """
+    Load the public key from the database.
+    """
     home_dir = str(Path.home())
     db_path = os.path.join(home_dir, ".keychain", "keys.db")
     conn = sqlite3.connect(db_path)
@@ -21,6 +24,9 @@ def load_public_key():
     return public_key
 
 def load_private_key():
+    """
+    Load the private key from the database.
+    """
     home_dir = str(Path.home())
     db_path = os.path.join(home_dir, ".keychain", "keys.db")
     conn = sqlite3.connect(db_path)
@@ -47,11 +53,17 @@ def load_private_key():
     return private_key
 
 def encrypt_message(message):
+    """
+    Encrypt a message using the public key.
+    """
     public_key = load_public_key()
     encrypted_message = encrypt(message.encode('utf-8'), public_key)
     return encrypted_message
 
 def decrypt_message(encrypted_message):
+    """
+    Decrypt a message using the private key.
+    """
     private_key = load_private_key()
     decrypted_message = decrypt(encrypted_message, private_key)
     return decrypted_message.decode('utf-8')

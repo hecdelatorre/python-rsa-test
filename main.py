@@ -5,6 +5,9 @@ from encryption_operations import encrypt_message, decrypt_message
 encrypted_text = ""
 
 def print_menu():
+    """
+    Print the menu options.
+    """
     print("Menu:")
     print("1. Generate Keys")
     print("2. Encrypt Message")
@@ -12,6 +15,9 @@ def print_menu():
     print("e. Exit")
 
 def main():
+    """
+    Main function to run the password manager.
+    """
     global encrypted_text
     while True:
         print_menu()
@@ -20,7 +26,8 @@ def main():
         if option.isdigit():
             option = int(option)
             if option == 1:
-                generate_keys()
+                key_size = 1024
+                generate_keys(key_size)
             elif option == 2:
                 message = input("Enter the message to encrypt: ")
                 encrypted_text = encrypt_message(message)

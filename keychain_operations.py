@@ -3,9 +3,11 @@ import sqlite3
 import shutil
 from pathlib import Path
 from rsa import newkeys
-from rsa.key import PublicKey, PrivateKey
 
 def create_keychain():
+    """
+    Create a keychain directory and keys database.
+    """
     home_dir = str(Path.home())
     keychain_dir = os.path.join(home_dir, ".keychain")
 
@@ -33,10 +35,13 @@ def create_keychain():
     print("Keys database created successfully.")
     return True
 
-def generate_keys():
+def generate_keys(key_size):
+    """
+    Generate RSA keys and store them in the database.
+    """
     if create_keychain():
         print("Generating keys...")
-        publicKey, privateKey = newkeys(1024)
+        public_key, private_key = newkeys(key_size)
 
         db_path = os.path.join(str(Path.home()), ".keychain", "keys.db")
         conn = sqlite3.connect(db_path)
@@ -44,11 +49,11 @@ def generate_keys():
         
         # PublicKey n - 1, e - 2
         # PrivateKey n - 1, e - 2, d - 3, p - 4, q - 5 
-        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (1, str(publicKey.n)))
-        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (2, str(publicKey.e)))
-        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (3, str(privateKey.d)))
-        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (4, str(privateKey.p)))
-        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (5, str(privateKey.q)))
+        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (1, str(public_key.n)))
+        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (2, str(public_key.e)))
+        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (3, str(private_key.d)))
+        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (4, str(private_key.p)))
+        cursor.execute("INSERT INTO keys (id, keypart) VALUES (?, ?)", (5, str(private_key.q)))
 
         conn.commit()
         conn.close()
@@ -56,6 +61,3 @@ def generate_keys():
         print("Keys generated and stored successfully.")
     else:
         print("No keys were generated.")
-
-if __name__ == "__main__":
-    generate_keys()
